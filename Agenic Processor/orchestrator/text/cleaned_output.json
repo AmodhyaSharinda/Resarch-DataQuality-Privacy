@@ -1,0 +1,54 @@
+[
+  {
+    "column": "text",
+    "id": "7c197735-d668-4320-82ae-98f68320f133",
+    "source": "test_example",
+    "clean_text": "Dies ist ein Beispieltext mit Fehlern, um zu entscheiden, welche Agenten ausgeführt werden sollen.",
+    "language": "de",
+    "sentences": [],
+    "tokens": [
+      "Dies",
+      "ist",
+      "ein",
+      "Beispieltext",
+      "mit",
+      "Fehlern",
+      ",",
+      "um",
+      "zu",
+      "entscheiden",
+      ",",
+      "welche",
+      "Agenten",
+      "ausgeführt",
+      "werden",
+      "sollen",
+      "."
+    ],
+    "confidence": 0.0,
+    "agents_run": [
+      "html_strip_agent",
+      "lang_detect_agent",
+      "translator_agent",
+      "spell_agent",
+      "sentence_split_agent",
+      "tokenizer_agent",
+      "ner_agent"
+    ],
+    "llm_plan": [
+      [
+        "html_strip_agent",
+        "lang_detect_agent",
+        "translator_agent",
+        "spell_agent",
+        "sentence_split_agent",
+        "tokenizer_agent",
+        "ner_agent",
+        "validation_agent"
+      ]
+    ],
+    "cleaning_status": "Passed",
+    "entity_detections": "Dies ist ein Beispieltext mit Fehlern, um zu entscheiden, welche Agenten ausgeführt werden sollen.",
+    "timestamp": "2026-01-05T02:34:13.297087"
+  }
+]

@@ -1,0 +1,8 @@
+langchain
+langchain-ollama
+langchain-chroma
+fastapi
+uvicorn[standard]
+streamlit
+kafka-python
+requests

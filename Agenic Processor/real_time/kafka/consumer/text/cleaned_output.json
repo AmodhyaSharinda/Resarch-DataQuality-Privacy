@@ -1,0 +1,59 @@
+{
+  "id": "f88eff1e-22fc-44d8-aed4-cf151974e08e",
+  "source": "unknown",
+  "clean_text": "Go until wrong point, crazy..\nAvailable only in bugs n great world la e buffet... Cine there got more wat...",
+  "language": "en",
+  "sentences": [],
+  "tokens": [
+    "Go",
+    "until",
+    "wrong",
+    "point",
+    ",",
+    "crazy",
+    "..",
+    "Available",
+    "only",
+    "in",
+    "bugs",
+    "n",
+    "great",
+    "world",
+    "la",
+    "e",
+    "buffet",
+    "...",
+    "Cine",
+    "there",
+    "got",
+    "more",
+    "wat",
+    "..."
+  ],
+  "confidence": 0.0,
+  "agents_run": [
+    "html_strip_agent",
+    "lang_detect_agent",
+    "spell_agent",
+    "sentence_split_agent",
+    "tokenizer_agent",
+    "ner_agent"
+  ],
+  "errors": [
+    "validation_agent failed: 1 validation error for validation_agent\nrecord\n  Input should be a valid dictionary [type=dict_type, input_value='Go until wrong point, cr...e there got more wat...', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type"
+  ],
+  "llm_plan": [
+    [
+      "html_strip_agent",
+      "lang_detect_agent",
+      "spell_agent",
+      "sentence_split_agent",
+      "tokenizer_agent",
+      "ner_agent",
+      "validation_agent"
+    ]
+  ],
+  "cleaning_status": "failed",
+  "entity_detections": "Go until wrong point, crazy..\nAvailable only in bugs n great world la e buffet... Cine there got more wat...",
+  "timestamp": "2026-01-06T04:32:05.535082"
+}

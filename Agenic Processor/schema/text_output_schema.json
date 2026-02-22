@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CleanedTextRecord",
+  "type": "object",
+  "required": [
+    "id", "source", "clean_text", "language",
+    "sentences", "tokens", "confidence",
+    "agents_run", "errors", "cleaning_status"
+  ],
+  "properties": {
+    "id": {"type": "string"},
+    "source": {"type": "string"},
+    "clean_text": {"type": "string"},
+    "language": {"type": "string"},
+    "sentences": {"type": "array","items":{"type":"string"}},
+    "tokens": {"type": "array","items":{"type":"string"}},
+    "entity_detections": {"type": "array","items":{"type":"object"}},
+    "confidence": {"type": "number","minimum":0,"maximum":1},
+    "agents_run": {"type": "array","items":{"type":"string"}},
+    "errors": {"type": "array","items":{"type":"string"}},
+    "cleaning_status": {"type":"string","enum":["cleaned","partial","failed"]}
+  }
+}
