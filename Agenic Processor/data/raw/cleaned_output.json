@@ -1,0 +1,13 @@
+[
+  {
+    "column": "text",
+    "id": "7ddf9430-6267-4a30-a6dd-abe6014c5b25",
+    "source": "test_example",
+    "clean_text": "Dies ist ein Beispieltext mit Fehlern, um zu entscheiden, welche Agenten ausgeführt werden sollen.",
+    "agents_run": [],
+    "errors": [
+      "registry.ollama.ai/library/text-llm:latest does not support tools (status code: 400)"
+    ],
+    "cleaning_status": "failed"
+  }
+]
