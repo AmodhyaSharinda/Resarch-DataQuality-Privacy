@@ -4,12 +4,7 @@ import pandas as pd
 from data_pipeline import find_sensitivity
 from policy_engine_ui import show_policy_ui
 from file_loader import extract_text_from_file
-
-# ======================================================
-# Demo Encryption (UI only – NOT real encryption)
-# ======================================================
-def demo_encrypt(value, entity_type, method):
-    return f"<{entity_type}:{method}>"
+from data_protection import apply_protection
 
 
 # ======================================================
@@ -167,25 +162,21 @@ st.markdown("""
     }
     
     /* Text Area Enhancement */
-        /* ===== Text Area Text Color Fix ===== */
     .stTextArea textarea {
-        color: #ffffff !important;          /* White text */
-        background-color: #2d3748 !important; /* Dark background */
-        caret-color: #ffffff !important;    /* Cursor color */
+        color: #ffffff !important;
+        background-color: #2d3748 !important;
+        caret-color: #ffffff !important;
     }
 
-    /* Placeholder text color */
     .stTextArea textarea::placeholder {
         color: #cbd5e0 !important;
     }
 
-    /* When focused */
     .stTextArea textarea:focus {
         border-color: #667eea !important;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25) !important;
     }
 
-    
     /* Output Code Block */
     .stCodeBlock {
         border-radius: 8px;
@@ -220,18 +211,16 @@ st.markdown("""
     }
     
     /* Success Message */
-    /* Success Message */
     .success-box {
         background: #c6f6d5;
         border-left: 4px solid #38a169;
         padding: 1rem 1.5rem;
         border-radius: 8px;
         margin-top: 1rem;
-        color: #1a202c !important;   /* ✅ Black text */
+        color: #1a202c !important;
         font-weight: 600;
     }
 
-    
     /* Hide Streamlit Branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -271,23 +260,6 @@ with col2:
         st.session_state.page = "policy"
         st.rerun()
 
-# ======================================================
-# Process Flow Visualization
-# ======================================================
-# st.markdown("""
-# <div class="process-flow">
-#     <span>🔍 Detect</span>
-#     <span class="flow-arrow">→</span>
-#     <span>🏷️ Classify</span>
-#     <span class="flow-arrow">→</span>
-#     <span>📋 Apply Policy</span>
-#     <span class="flow-arrow">→</span>
-#     <span>🔒 Encrypt</span>
-#     <span class="flow-arrow">→</span>
-#     <span>✅ Secure</span>
-# </div>
-# """, unsafe_allow_html=True)
-
 
 # ======================================================
 # 1️⃣ INPUT SECTION
@@ -297,12 +269,14 @@ st.markdown("""
     <span class="step-badge">Step 1</span>
     <div class="card-header">
         <span class="card-icon"></span>
-        <h3 class="card-title">Input Text</h3>
+        <h3 class="card-title">Input Data & Context</h3>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown('<div style="margin-top: -1rem;">', unsafe_allow_html=True)
+
+# --- File Upload ---
 uploaded_file = st.file_uploader(
     "Upload a file containing sensitive data",
     type=["txt", "json"]
@@ -313,22 +287,44 @@ input_text = None
 if uploaded_file:
     try:
         input_text = extract_text_from_file(uploaded_file)
-
         st.success(f"📄 File loaded: {uploaded_file.name}")
-
         with st.expander("🔍 Preview extracted content"):
             st.code(input_text[:3000], language="text")
-
     except Exception as e:
         st.error(str(e))
         st.stop()
 
+# --- Data Usage Context (right below file upload) ---
+st.markdown("<br>", unsafe_allow_html=True)
 
+CONTEXT_OPTIONS = {
+    "Logging (Low Risk)": "logging",
+    "Storage (Internal)": "storage",
+    "Analytics": "analytics",
+    "External Transfer (High Risk)": "external_transfer",
+}
+
+st.markdown("""
+<div class="info-banner">
+    🎯 How will this data be used? The protection strength is automatically determined based on sensitivity level and usage context.
+</div>
+""", unsafe_allow_html=True)
+
+selected_context_label = st.selectbox(
+    "Data Usage Context",
+    list(CONTEXT_OPTIONS.keys()),
+    index=1,
+)
+data_usage_context = CONTEXT_OPTIONS[selected_context_label]
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# --- Action Buttons ---
 col1, col2, col3 = st.columns([1, 1, 2])
 with col1:
     process_clicked = st.button("Process Text", use_container_width=True)
 with col2:
-    if st.button(" Clear", use_container_width=True):
+    if st.button("🗑️ Clear", use_container_width=True):
         st.rerun()
 
 st.markdown('</div>', unsafe_allow_html=True)
@@ -339,13 +335,14 @@ st.markdown('</div>', unsafe_allow_html=True)
 # ======================================================
 if process_clicked:
 
-    if not input_text.strip():
-        st.error("⚠️ Please enter some text to process.")
+    if not input_text or not input_text.strip():
+        st.error("⚠️ Please upload a file to process.")
         st.stop()
 
     with st.spinner("🔍 Analyzing text and detecting entities..."):
         entities = find_sensitivity(input_text)
         print(entities)
+
     if not entities:
         st.info("ℹ️ No sensitive entities detected in the provided text.")
         st.stop()
@@ -378,8 +375,7 @@ if process_clicked:
     )
 
     st.markdown('<div style="margin-top: -1rem;">', unsafe_allow_html=True)
-    
-    # Display metrics
+
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Total Entities", len(unique_entities), delta=None)
@@ -388,63 +384,16 @@ if process_clicked:
         st.metric("High Sensitivity", high_count, delta=None)
     with col3:
         st.metric("Total Detections", len(entities), delta=None)
-    
+
     st.dataframe(df_entities, use_container_width=True, hide_index=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # ==================================================
-    # 3️⃣ ENCRYPTION SELECTION SECTION
+    # 3️⃣ OUTPUT SECTION
     # ==================================================
     st.markdown("""
     <div class="pro-card">
         <span class="step-badge">Step 3</span>
-        <div class="card-header">
-            <span class="card-icon"></span>
-            <h3 class="card-title">Encryption Configuration</h3>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div style="margin-top: -1rem;">', unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="info-banner">
-        💡 Select appropriate encryption methods for each entity type based on sensitivity level
-    </div>
-    """, unsafe_allow_html=True)
-
-    ENCRYPTION_OPTIONS = ["Masking", "Hashing", "AES", "Tokenization"]
-    encryption_choices = {}
-
-    cols = st.columns(2)
-    for idx, (_, row) in enumerate(df_entities.iterrows()):
-        with cols[idx % 2]:
-            default_index = 2 if row["Sensitivity Level"] == "High" else 1
-            
-            sensitivity_class = f"sensitivity-{row['Sensitivity Level'].lower()}"
-            st.markdown(f"""
-            <div style="margin-bottom: 0.5rem;">
-                <strong>{row['Entity Type']}</strong>
-                <span class="{sensitivity_class}"> • {row['Sensitivity Level']}</span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            encryption_choices[row["Entity Type"]] = st.selectbox(
-                f"Encryption method for {row['Entity Type']}",
-                ENCRYPTION_OPTIONS,
-                index=default_index,
-                key=f"enc_{row['Entity Type']}",
-                label_visibility="collapsed"
-            )
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # ==================================================
-    # 4️⃣ OUTPUT SECTION
-    # ==================================================
-    st.markdown("""
-    <div class="pro-card">
-        <span class="step-badge">Step 4</span>
         <div class="card-header">
             <span class="card-icon"></span>
             <h3 class="card-title">Privacy-Protected Output</h3>
@@ -455,32 +404,40 @@ if process_clicked:
     st.markdown('<div style="margin-top: -1rem;">', unsafe_allow_html=True)
 
     safe_text = input_text
+    protection_log = []
 
     # Replace longer values first (prevents partial overlap)
     for ent in sorted(entities, key=lambda x: len(x["value"]), reverse=True):
-        method = encryption_choices.get(ent["entity"], "Masking")
-        safe_text = safe_text.replace(
-            ent["value"],
-            demo_encrypt(ent["value"], ent["entity"], method)
+        sensitivity = ent.get("sensitivity_level", "Medium")
+        result = apply_protection(
+            value=ent["value"],
+            sensitivity_level=sensitivity.upper(),
+            data_usage_context=data_usage_context,
+            entity_type=ent["entity"]
         )
+        protected_value = result.get("protected_value", ent["value"])
+        method_used = result.get("method_used", "UNKNOWN")
+        risk_score = result.get("risk_score", "N/A")
+
+        protection_log.append({
+            "Entity Type": ent["entity"],
+            "Original Value": ent["value"],
+            "Method Used": method_used,
+            "Risk Score": risk_score,
+            "Protected Value": str(protected_value)[:60] + ("..." if len(str(protected_value)) > 60 else "")
+        })
+
+        safe_text = safe_text.replace(ent["value"], f"[{ent['entity']}:{method_used}]")
 
     st.code(safe_text, language="text")
-    
+
+    with st.expander("🔍 Protection Details"):
+        st.dataframe(pd.DataFrame(protection_log), use_container_width=True, hide_index=True)
+
     st.markdown("""
     <div class="success-box">
         ✅ Text successfully processed with privacy preservation applied
     </div>
     """, unsafe_allow_html=True)
-    
-    # # Download button
-    # col1, col2 = st.columns([1, 3])
-    # with col1:
-    #     st.download_button(
-    #         label="📥 Download Protected Text",
-    #         data=safe_text,
-    #         file_name="privacy_protected_output.txt",
-    #         mime="text/plain",
-    #         use_container_width=True
-    #     )
-    
+
     st.markdown('</div>', unsafe_allow_html=True)
