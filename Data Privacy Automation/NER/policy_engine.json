@@ -1,0 +1,182 @@
+{
+    "policies": [
+        {
+            "entity": "CREDIT CARD NO.",
+            "sensitivity_level": "High",
+            "reason": "Core component of Cardholder Data (CHD); its compromise enables fraudulent transactions.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "",
+            "source_file": ""
+        },
+        {
+            "entity": "PERSON",
+            "sensitivity_level": "Medium",
+            "reason": "Personally identifiable information linked to a payment card; increases risk when combined with PAN.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "",
+            "source_file": ""
+        },      
+        
+        {
+            "entity": "CREDIT CARD NO.",
+            "sensitivity_level": "High",
+            "reason": "Primary Account Number (PAN) is considered Cardholder Data and Account Data, to which PCI DSS requirements apply when stored, processed, or transmitted.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "8",
+            "source_file": "PCI-DSS.pdf"
+        },
+        {
+            "entity": "PERSON",
+            "sensitivity_level": "High",
+            "reason": "Cardholder Name is considered Cardholder Data and Account Data, to which PCI DSS requirements apply when stored, processed, or transmitted.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "8",
+            "source_file": "PCI-DSS.pdf"
+        },
+        {
+            "entity": "Card Number",
+            "sensitivity_level": "High",
+            "reason": "PAN (Primary Account Number) is a critical piece of payment card data. Its transmission via end-user messaging technologies is explicitly flagged as being 'easily intercepted by packet-sniffing' and requires 'strong cryptography' to prevent unauthorized access and potential financial fraud, indicating a high risk of compromise.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "110",
+            "source_file": "PCI-DSS.pdf"
+        },
+        {
+            "entity": "PERSON",
+            "sensitivity_level": "High",
+            "reason": "The text mentions 'impersonating personnel', indicating that the identity of individuals (PERSON) is a target for malicious actors. Impersonation can lead to unauthorized access, fraud, and reputational damage.",
+            "regulation": "",
+            "page": "",
+            "source_file": ""
+        },
+        {
+            "entity": "EMAIL",
+            "sensitivity_level": "High",
+            "reason": "The text discusses 'spoofing the entity\u2019s domain' using controls like DMARC, SPF, and DKIM, and 'blocking phishing emails'. Phishing emails are a critical threat vector for credential theft, malware distribution, and sensitive data exfiltration, directly impacting the security posture.",
+            "regulation": "",
+            "page": "",
+            "source_file": ""
+        },
+        {
+            "entity": "PER",
+            "sensitivity_level": "High",
+            "reason": "A natural person can be directly identified or targeted for identity theft, fraud, or surveillance. GDPR and Sri Lanka PDPA protect individuals as data subjects whose personal data must be processed lawfully and securely.",
+            "regulation": "GDPR Article 4(1), PDPA Act No. 9 of 2022",
+            "page": "GDPR L119/33",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "ORG",
+            "sensitivity_level": "Medium",
+            "reason": "Organizations can be indirectly identified through associated individuals, contracts, or financial data. While GDPR does not protect legal persons directly, organizational data linked to individuals may still constitute personal data.",
+            "regulation": "GDPR Recital 14",
+            "page": "L119/4",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "NIC",
+            "sensitivity_level": "High",
+            "reason": "National Identity Card numbers uniquely identify individuals and enable impersonation and identity fraud. Sri Lanka PDPA classifies such identifiers as personal data requiring strong safeguards.",
+            "regulation": "Sri Lanka PDPA Act No. 9 of 2022",
+            "page": "N/A",
+            "source_file": "PDPA.pdf"
+        },
+        {
+            "entity": "CREDIT_CARD_NO",
+            "sensitivity_level": "High",
+            "reason": "Credit card numbers (PAN) enable fraudulent transactions if exposed. PCI-DSS defines PAN as cardholder data and mandates encryption, masking, and strict access control.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "73",
+            "source_file": "PCI-DSS.pdf"
+        },
+        {
+            "entity": "BANK_ACCOUNT_NUMBER",
+            "sensitivity_level": "High",
+            "reason": "Bank account numbers can be used for unauthorized transfers and financial fraud. GDPR and PDPA treat financial identifiers as personal data requiring confidentiality and integrity controls.",
+            "regulation": "GDPR Article 32, PDPA Act No. 9 of 2022",
+            "page": "GDPR L119/53",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "IP_ADDRESS",
+            "sensitivity_level": "Medium",
+            "reason": "IP addresses are online identifiers that can be linked to individuals and used for tracking or profiling. GDPR explicitly recognizes IP addresses as personal data.",
+            "regulation": "GDPR Recital 30",
+            "page": "L119/5",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "MAC_ADDRESS",
+            "sensitivity_level": "Medium",
+            "reason": "MAC addresses uniquely identify devices and can indirectly identify individuals when combined with other data. GDPR treats device identifiers as personal data.",
+            "regulation": "GDPR Recital 30",
+            "page": "L119/5",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "EMAIL",
+            "sensitivity_level": "Medium",
+            "reason": "Email addresses directly identify or contact individuals and are commonly used in phishing and impersonation attacks. GDPR and PDPA require protection against unauthorized disclosure.",
+            "regulation": "GDPR Article 4(1), PDPA Act No. 9 of 2022",
+            "page": "GDPR L119/33",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "PHONE_NUMBER",
+            "sensitivity_level": "Medium",
+            "reason": "Phone numbers enable direct contact and are frequently abused for fraud and social engineering. They are considered personal data under GDPR and PDPA.",
+            "regulation": "GDPR Article 4(1), PDPA Act No. 9 of 2022",
+            "page": "GDPR L119/33",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "DATE_OF_BIRTH",
+            "sensitivity_level": "High",
+            "reason": "Date of birth is a core identity attribute often used for verification. Exposure increases the risk of identity theft and profiling.",
+            "regulation": "GDPR Article 4(1)",
+            "page": "GDPR L119/33",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "LOC",
+            "sensitivity_level": "High",
+            "reason": "Location data reveals movement patterns and personal behavior. GDPR considers location data highly sensitive due to risks of surveillance and physical harm.",
+            "regulation": "GDPR Recital 30",
+            "page": "L119/5",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "HEALTH_CONDITION",
+            "sensitivity_level": "High",
+            "reason": "Personal data concerning health reveals information about the past, current, or future physical or mental health status of a data subject. GDPR explicitly classifies such data as a special category of personal data due to the significant risks it poses to the rights and freedoms of natural persons, including potential physical, material, and non-material harm if misused or unlawfully processed.",
+            "regulation": "GDPR",
+            "page": "6, 10, 15",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "DATE",
+            "sensitivity_level": "Medium",
+            "reason": "Accurate and consistent system time configuration is critical for maintaining the integrity of security logs, detecting unauthorized modifications to critical files, and supporting effective monitoring and incident response. PCI-DSS requires the use of designated central time servers and controlled external time sources to ensure log correlation and audit reliability. Improper time synchronization can undermine forensic investigations and weaken controls designed to protect cardholder data.",
+            "regulation": "PCI-DSS v4.0",
+            "page": "9, 29, 231, 260",
+            "source_file": "PCI-DSS.pdf"
+        },
+        {
+            "entity": "MARITAL_STATUS",
+            "sensitivity_level": "High",
+            "reason": "Personal data revealing racial or ethnic origin, political opinions, religious or philosophical beliefs, trade union membership, as well as genetic and biometric data, is explicitly classified by GDPR as special category personal data. Processing such data poses a high risk to the rights and freedoms of natural persons and may result in physical, material, or non-material harm if misused. GDPR therefore imposes strict limitations on lawful processing, requires compatibility with legitimate purposes, and mandates data protection impact assessments where systematic or extensive evaluation of individuals is involved.",
+            "regulation": "GDPR",
+            "page": "5, 10, 15, 18, 38",
+            "source_file": "GDPR.pdf"
+        },
+        {
+            "entity": "PASSWORD", 
+            "sensitivity_level": "Critical", 
+            "regulation": "PCI-DSS v4.0", 
+            "reason":"Passwords/passphrases should be sufficiently complex, so they are impractical for an attacker to guess or otherwise discover its value. Entities can consider adding increased complexity by requiring the use of special characters and upper- and lower-case characters, in addition to the minimum standards outlined by this requirement. Additional complexity increases the time required for offline brute force attacks of hashed passwords/passphrases. Another option for increasing the resistance of passwords to guessing attacks is by comparing proposed password/passphrases to a bad password list and having users provide new passwords for any passwords found on the list. 8.3.6",
+            "page": "192", 
+            "source": "PCI-DSS.pdf"
+        }
+
+    ]
+}
