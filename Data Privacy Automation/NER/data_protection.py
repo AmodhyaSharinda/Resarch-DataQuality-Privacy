@@ -134,100 +134,101 @@ def generalize_location(location: str) -> str:
 # MAIN PROTECTION ENGINE
 # ============================================================
 
-def apply_protection(
-    value: str,
-    sensitivity_level: str,
-    data_usage_context: str,
-    entity_type: str = None
-):
-    """
-    Main protection function
-    Returns only required fields to frontend
-    """
+# def apply_protection(
+#     value: str,
+#     sensitivity_level: str,
+#     data_usage_context: str,
+#     entity_type: str = None
+# ):
+#     """
+#     Main protection function
+#     Returns only required fields to frontend
+#     """
 
-    # Handle empty value safely
-    if not value:
-        return {
-            "entity_type": entity_type,
-            "sensitivity_level": sensitivity_level,
-            "data_usage_context": data_usage_context,
-            "risk_score": 0,
-            "method_used": "NONE",
-            "protected_value": value
-        }
+#     # Handle empty value safely
+#     if not value:
+#         return {
+#             "entity_type": entity_type,
+#             "sensitivity_level": sensitivity_level,
+#             "data_usage_context": data_usage_context,
+#             "risk_score": 0,
+#             "method_used": "NONE",
+#             "protected_value": value
+#         }
 
-    # Special rule: PASSWORD always bcrypt
-    if entity_type and entity_type.upper() == "PASSWORD":
-        protected_value = hash_password(value)
-        return {
-            "entity_type": entity_type,
-            "sensitivity_level": sensitivity_level,
-            "data_usage_context": data_usage_context,
-            "risk_score": 5.0,  # treat as maximum risk
-            "method_used": "BCRYPT_PASSWORD_HASH",
-            "protected_value": protected_value
-        }
+#     # Special rule: PASSWORD always bcrypt
+#     if entity_type and entity_type.upper() == "PASSWORD":
+#         protected_value = hash_password(value)
+#         return {
+#             "entity_type": entity_type,
+#             "sensitivity_level": sensitivity_level,
+#             "data_usage_context": data_usage_context,
+#             "risk_score": 5.0,  # treat as maximum risk
+#             "method_used": "BCRYPT_PASSWORD_HASH",
+#             "protected_value": protected_value
+#         }
 
-    # Calculate risk score
-    rs = calculate_risk_score(sensitivity_level, data_usage_context)
+#     # Calculate risk score
+#     rs = calculate_risk_score(sensitivity_level, data_usage_context)
 
-    # Decision thresholds
-    if rs <= 2:
-        method = "MASKING"
-        protected_value = partial_mask(value)
+#     # Decision thresholds
+#     if rs <= 2:
+#         method = "MASKING"
+#         protected_value = partial_mask(value)
 
-    elif 2 < rs <= 3.5:
-        method = "HASH_SHA256"
-        protected_value = hash_value(value)
+#     elif 2 < rs <= 3.5:
+#         method = "HASH_SHA256"
+#         protected_value = hash_value(value)
 
-    elif 3.5 < rs <= 4.5:
-        method = "AES_256_GCM"
-        protected_value = aes_encrypt(value)
+#     elif 3.5 < rs <= 4.5:
+#         method = "AES_256_GCM"
+#         protected_value = aes_encrypt(value)
 
-    else:
-        method = "TOKENIZATION"
-        protected_value = tokenize(value)
+#     else:
+#         method = "TOKENIZATION"
+#         protected_value = tokenize(value)
 
-    return {
-        "entity_type": entity_type,
-        "sensitivity_level": sensitivity_level,
-        "data_usage_context": data_usage_context,
-        "risk_score": round(rs, 2),
-        "method_used": method,
-        "protected_value": protected_value
-    }
+#     return {
+#         "entity_type": entity_type,
+#         "sensitivity_level": sensitivity_level,
+#         "data_usage_context": data_usage_context,
+#         "risk_score": round(rs, 2),
+#         "method_used": method,
+#         "protected_value": protected_value
+#     }
 
 # ============================================================
 # METHOD SELECTION ENGINE (NO TRANSFORMATION)
 # ============================================================
 
 def select_protection_method(
-    sensitivity_level: str,
-    data_usage_context: str,
-    entity_type: str = None
+    entity_type: str = None,
+    risk_score: float = None
 ):
     """
-    Only decides which protection method SHOULD be used.
-    Does NOT modify the value.
+    Decides which protection method SHOULD be used
+    based on risk_score.
+    Does NOT calculate risk score.
     """
 
     # Special rule: PASSWORD always bcrypt
     if entity_type and entity_type.upper() == "PASSWORD":
         return {
             "entity_type": entity_type,
-            "risk_score": 5.0,
             "suggested_method": "BCRYPT_PASSWORD_HASH"
         }
 
-    rs = calculate_risk_score(sensitivity_level, data_usage_context)
+    if risk_score is None:
+        raise ValueError("risk_score must be provided")
 
-    if rs <= 2:
-        method = "MASKING"
+    # Select method based on risk score
+    if risk_score <= 2:
+        method = "MASKING" 
 
-    elif 2 < rs <= 3.5:
+    elif 2 < risk_score <= 3.5:
         method = "HASH_SHA256"
 
-    elif 3.5 < rs <= 4.5:
+    elif 3.5 < risk_score <= 4.5:
         method = "AES_256_GCM"
 
     else:
@@ -235,9 +236,9 @@ def select_protection_method(
 
     return {
         "entity_type": entity_type,
-        "risk_score": round(rs, 2),
         "suggested_method": method
     }
+
 
 
 # ============================================================
